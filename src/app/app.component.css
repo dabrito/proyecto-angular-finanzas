@@ -44,7 +44,7 @@ body {
   }
   
   .btn-toggle[aria-expanded="true"] {
-    color: rgba(var(--bs-emphasis-color-rgb), .85);
+    color: rgba(var(--bs-emphasis-color-rgb), .100);
   }
   .btn-toggle[aria-expanded="true"]::before {
     transform: rotate(90deg);
