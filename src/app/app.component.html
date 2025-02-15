@@ -185,36 +185,19 @@
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="#" class="nav-link active" aria-current="page">
-          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"/></svg>
-          Home
-        </a>
+        <a class="nav-link active" [routerLink]="['/dashboard']" style="background-color: transparent;">Dashboard</a>
       </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"/></svg>
-          Dashboard
-        </a>
+      <li class="nav-item">
+        <a class="nav-link active" [routerLink]="['/reportes']"style="background-color: transparent;">Reportes</a>
       </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"/></svg>
-          Reportes
-        </a>
+      <li class="nav-item">
+        <a class="nav-link active" [routerLink]="['/billeteras']"style="background-color: transparent;">Billeteras</a>
       </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"/></svg>
-          Billetera
-        </a>
-      </li>
-      <li>
-        <a href="#" class="nav-link text-white">
-          <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#people-circle"/></svg>
-          Conversión de Monedas
-        </a>
+      <li class="nav-item">
+        <a class="nav-link active" [routerLink]="['/conversion']"style="background-color: transparent;">Conversión</a>
       </li>
     </ul>
+    <router-outlet></router-outlet>
   </div>
   <div class="b-example-divider b-example-vr"></div>
 

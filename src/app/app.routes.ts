@@ -1,8 +1,4 @@
-//import { Routes } from '@angular/router';
-
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import { Routes } from '@angular/router';
 import { DashboardComponent } from './shared/dashboard/dashboard.component';
 import { ReportesComponent } from './shared/reportes/reportes.component';
 import { BilleterasComponent } from './shared/billeteras/billeteras.component';
@@ -13,10 +9,5 @@ export const routes: Routes = [
   { path: 'reportes', component: ReportesComponent },
   { path: 'billeteras', component: BilleterasComponent },
   { path: 'conversion', component: ConversionComponent },
-  { path: '', redirectTo: '/home', pathMatch: 'full' } // Redirección por defecto
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
 ];
-
-@NgModule({
-    imports: [RouterModule.forRoot(routes)],
-    exports: [RouterModule]
-  })
