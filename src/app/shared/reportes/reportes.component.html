@@ -1,1 +1,25 @@
-<p>reportes works!</p>
+<div class="container my-4">
+  <h2 class="text-center">Reportes</h2>
+
+  <div class="row">
+    <!-- Gráfico de dona: Ingresos vs Gastos -->
+    <div class="col-md-6">
+      <h4 class="text-center">Ingresos vs Gastos</h4>
+      <canvas baseChart 
+              [data]="doughnutChartData"
+              [options]="doughnutChartOptions"
+              [type]="doughnutChartType">
+      </canvas>
+    </div>
+
+    <!-- Gráfico de barras: Transacciones por Categoría -->
+    <div class="col-md-6">
+      <h4 class="text-center">Transacciones por Categoría</h4>
+      <canvas baseChart 
+              [data]="barChartData"
+              [options]="barChartOptions"
+              [type]="barChartType">
+      </canvas>
+    </div>
+  </div>
+</div>
