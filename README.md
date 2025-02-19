@@ -13,17 +13,14 @@
   - Coloque toda la reportería del git en un pdf, junto con las asignaciones de cada miembro y adjunte con los resultados obtenidos de la página por cada miembro.
 - Adjunte coevaluación de miembros utilizando una escala del 1 al 5 donde 1 es lo más bajo y 5 el mejor desempeño. Use los siguientes criterios:
   - Contribución individual y trabajo en equipo
-
-- Evaluar la participación activa de cada integrante en el proyecto.
-- Considerar la colaboración, comunicación y apoyo entre compañeros.
-- Uso de herramientas de gestión de equipo (Git, Trello, Jira, etc.).
-- Calidad del código y buenas prácticas
-
-- Revisión del código en términos de limpieza, legibilidad y documentación.
-- Aplicación de principios como modularidad, reutilización y eficiencia.
-- Uso de control de versiones y cumplimiento de estándares de codificación.
-- Cumplimiento de requerimientos y resolución de problemas
-
-- Validar si el software cumple con los requisitos definidos y es funcional.
-- Evaluar la capacidad del equipo para resolver errores y mejorar el producto.
-- Considerar la innovación y creatividad en las soluciones implementadas.
+  - Evaluar la participación activa de cada integrante en el proyecto.
+  - Considerar la colaboración, comunicación y apoyo entre compañeros.
+  - Uso de herramientas de gestión de equipo (Git, Trello, Jira, etc.).
+  - Calidad del código y buenas prácticas
+  - Revisión del código en términos de limpieza, legibilidad y documentación.
+  - Aplicación de principios como modularidad, reutilización y eficiencia.
+  - Uso de control de versiones y cumplimiento de estándares de codificación.
+  - Cumplimiento de requerimientos y resolución de problemas
+  - Validar si el software cumple con los requisitos definidos y es funcional.
+  - Evaluar la capacidad del equipo para resolver errores y mejorar el producto.
+  - Considerar la innovación y creatividad en las soluciones implementadas.
