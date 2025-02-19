@@ -1,11 +1,13 @@
-# Desarrolle una aplicación front end utilizando Angular y bootstrap. Se pide lo siguiente:
+# Desarrolle una aplicación front end utilizando Angular y bootstrap.
+
+Se pide lo siguiente:
 
 - La aplicación debe ser relacionada a un tema (elegido en clase).
 - Use componentes de Angular.
 - Divida su página en secciones para utilizar diversos componentes.
 - Proporcione navegabilidad mediante el uso de rutas y el uso de menú[mínimo 4 opciones diferentes].
 - Cargue información de diversos tipos utilizando los controles adecuados, utilice bootstrap.
-- Use multimedia (imágenes, sonidos, etc.)[Debe existir algún tipo de movimiento de los controles, por ejemplo el cambio en un carrusel, etc.]
+- Use multimedia (imágenes, sonidos, etc.) [Debe existir algún tipo de movimiento de los controles, por ejemplo el cambio en un carrusel, etc.]
 - Debe consumir información externa de un servicio (puede usar cualquier servicio de internet).
 - Use Github como repositorio (proporcione el enlace), el mismo debe reflejar:
   - una rama por cada estudiante con los commits respectivos de los cambios realizados merge de la aplicación final.
