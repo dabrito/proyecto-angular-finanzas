@@ -64,7 +64,7 @@ export class ReportesComponent implements AfterViewInit {
   updateChart() {
     if (!this.chart) return;
 
-    const transactions = this.transactions;
+    const transactions = this.transactions; // Obtiene las transacciones usando el getter
 
     const grouped: { [key: string]: { ingreso: number; gasto: number } } = {};
 
