@@ -1,1 +1,24 @@
-<p>billeteras works!</p>
+<div class="container-fluid p-3" style="height: 100vh; overflow-y: auto;">
+  <table class="table table-bordered table-hover w-100">
+    <thead class="table-dark">
+      <tr>
+        <th>Fecha</th>
+        <th>Categoría</th>
+        <th>Monto</th>
+        <th>Tipo</th>
+        <th style="width: 100px;">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let t of transactions">
+        <td>{{ t.date | date:'shortDate' }}</td>
+        <td>{{ t.category }}</td>
+        <td>{{ t.amount | currency:'USD' }}</td>
+        <td>{{ t.type }}</td>
+        <td>
+          <button class="btn btn-danger btn-sm" (click)="deleteTransaction(t.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
