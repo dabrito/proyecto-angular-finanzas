@@ -1,27 +1,29 @@
-# ProyectoDesarrolloWebP1
+# Desarrolle una aplicación front end utilizando Angular y bootstrap. Se pide lo siguiente:
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.11.
+- La aplicación debe ser relacionada a un tema (elegido en clase).
+- Use componentes de Angular.
+- Divida su página en secciones para utilizar diversos componentes.
+- Proporcione navegabilidad mediante el uso de rutas y el uso de menú[mínimo 4 opciones diferentes].
+- Cargue información de diversos tipos utilizando los controles adecuados, utilice bootstrap.
+- Use multimedia (imágenes, sonidos, etc.)[Debe existir algún tipo de movimiento de los controles, por ejemplo el cambio en un carrusel, etc.]
+- Debe consumir información externa de un servicio (puede usar cualquier servicio de internet).
+- Use Github como repositorio (proporcione el enlace), el mismo debe reflejar:
+  - una rama por cada estudiante con los commits respectivos de los cambios realizados merge de la aplicación final.
+  - reporte de las asignaciones realizadas por cada estudiante.
+  - Coloque toda la reportería del git en un pdf, junto con las asignaciones de cada miembro y adjunte con los resultados obtenidos de la página por cada miembro.
+- Adjunte coevaluación de miembros utilizando una escala del 1 al 5 donde 1 es lo más bajo y 5 el mejor desempeño. Use los siguientes criterios:
+  - Contribución individual y trabajo en equipo
 
-## Development server
+- Evaluar la participación activa de cada integrante en el proyecto.
+- Considerar la colaboración, comunicación y apoyo entre compañeros.
+- Uso de herramientas de gestión de equipo (Git, Trello, Jira, etc.).
+- Calidad del código y buenas prácticas
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Revisión del código en términos de limpieza, legibilidad y documentación.
+- Aplicación de principios como modularidad, reutilización y eficiencia.
+- Uso de control de versiones y cumplimiento de estándares de codificación.
+- Cumplimiento de requerimientos y resolución de problemas
 
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+- Validar si el software cumple con los requisitos definidos y es funcional.
+- Evaluar la capacidad del equipo para resolver errores y mejorar el producto.
+- Considerar la innovación y creatividad en las soluciones implementadas.

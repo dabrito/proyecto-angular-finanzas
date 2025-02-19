@@ -1,1 +1,92 @@
-<p>dashboard works!</p>
+<div class="container my-4">
+  <div class="row">
+    <!-- Columna izquierda -->
+    <div class="col-md-6">
+
+      <!-- Tabla de Saldo -->
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th colspan="2" class="text-center">Saldo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Ingresos</td>
+            <td>{{ ingresos | currency:'USD' }}</td>
+          </tr>
+          <tr>
+            <td>Gastos</td>
+            <td>{{ gastos | currency:'USD' }}</td>
+          </tr>
+          <tr>
+            <td>Total</td>
+            <td>{{ total | currency:'USD' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Tabla de Últimas Transacciones -->
+      <table class="table table-bordered mt-4">
+        <thead>
+          <tr>
+            <th colspan="4" class="text-center">Últimas Transacciones</th>
+          </tr>
+          <tr>
+            <th>Fecha</th>
+            <th>Categoría</th>
+            <th>Monto</th>
+            <th>Tipo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Mostramos solo las últimas 5 -->
+          <tr *ngFor="let t of transactions.slice(-5)">
+            <td>{{ t.date | date:'shortDate' }}</td>
+            <td>{{ t.category }}</td>
+            <td>{{ t.amount | currency:'USD' }}</td>
+            <td>{{ t.type }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Columna derecha -->
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          TRANSACCIÓN (Ingreso - Gasto)
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="type" class="form-label">Tipo</label>
+            <select id="type" class="form-select" [(ngModel)]="newTransactionType">
+              <option value="ingreso">Ingreso</option>
+              <option value="gasto">Gasto</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="amount" class="form-label">Cantidad</label>
+            <input type="number" class="form-control" id="amount" [(ngModel)]="newTransactionAmount">
+          </div>
+
+          <div class="mb-3">
+            <label for="category" class="form-label">Categoría</label>
+            <input type="text" class="form-control" id="category" [(ngModel)]="newTransactionCategory">
+          </div>
+
+          <div class="mb-3">
+            <label for="date" class="form-label">Fecha</label>
+            <input type="date" class="form-control" id="date" [(ngModel)]="newTransactionDate">
+          </div>
+
+          <!-- Botón para agregar la transacción -->
+          <button class="btn btn-primary" (click)="addTransaction()">
+            Agregar Transacción
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
