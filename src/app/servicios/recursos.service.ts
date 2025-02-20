@@ -9,8 +9,8 @@ import { LiveResponse } from '../interfaz/currencyLive';
 })
 export class RecursosService {
   private baseUrl = 'https://api.exchangerate.host';
-  // private apiKey = '2dfc4f27f1c8c94842dba3872ff2123c'; // tu API key
-  private apiKey = '2dfc4f27f1c8c94842dba3872ff1123c'; // API con fallo interno para que no consuma 
+  private apiKey = '2dfc4f27f1c8c94842dba3872ff2123c'; // tu API key
+  // private apiKey = '2dfc4f27f1c8c94842dba3872ff1123c'; // API con fallo interno para que no consuma 
 
   constructor(private http: HttpClient) {}
 

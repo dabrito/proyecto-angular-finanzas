@@ -1,10 +1,10 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Transaccion } from '../../interfaz/transaccion';
 import { ChartOptions, ChartType, ChartData } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
-import { Chart, DoughnutController, BarController, LineController, ArcElement, BarElement, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend } from 'chart.js';
+import { Chart, DoughnutController, BarController, LineController, ArcElement, BarElement, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend, } from 'chart.js';
 Chart.register( DoughnutController, BarController, LineController, ArcElement, BarElement, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend );
 
 @Component({
@@ -14,7 +14,7 @@ Chart.register( DoughnutController, BarController, LineController, ArcElement, B
   templateUrl: './reportes.component.html',
   styleUrls: ['./reportes.component.css'],
 })
-export class ReportesComponent implements OnInit {
+export class ReportesComponent implements OnInit, AfterViewInit {
   @ViewChild('lineChart') lineChart!: ElementRef;
   chart!: Chart;
 
@@ -27,7 +27,8 @@ export class ReportesComponent implements OnInit {
     datasets: [
       {
         data: [0, 0],
-        backgroundColor: ['rgba(75,192,192,0.6)', 'rgba(255,99,132,0.6)'],
+        borderColor: ['blue', 'red'],
+        backgroundColor: ['rgba(0, 0, 255, 0.2)', 'rgba(255,99,132,0.6)'],
       },
     ],
   };
@@ -42,12 +43,14 @@ export class ReportesComponent implements OnInit {
       {
         data: [],
         label: 'Ingresos',
-        backgroundColor: 'rgba(75,192,192,0.6)',
+        borderColor: 'blue',
+        backgroundColor: 'rgba(0, 0, 255, 0.2)',
       },
       {
         data: [],
         label: 'Gastos',
-        backgroundColor: 'rgba(255,99,132,0.6)',
+        borderColor: 'red',
+        backgroundColor: 'rgba(255, 0, 0, 0.2)',
       },
     ],
   };
@@ -60,20 +63,25 @@ export class ReportesComponent implements OnInit {
     this.loadTransactions();
   }
 
-  // Cargar transacciones desde localStorage
+  // Se utiliza AfterViewInit para garantizar que el canvas ya esté disponible
+  ngAfterViewInit(): void {
+    this.createLineChart();
+    this.updateLineChart();
+  }
+
   loadTransactions(): void {
     const data = localStorage.getItem('transactions');
     if (data) {
       this.transactions = JSON.parse(data).map((t: Transaccion) => ({
         ...t,
-        date: new Date(t.date), // Convertir fecha de string a Date
+        date: new Date(t.date)
       }));
+      this.transactions.sort((a, b) => b.date.getTime() - a.date.getTime());
     }
     this.updateCharts();
-    this.createLineChart();
   }
 
-  // Actualizar los datos de los gráficos
+  // Actualizar los datos de los gráficos de dona y barras, y el de líneas si existe
   updateCharts(): void {
     // 1. Gráfico de dona: Total de ingresos y gastos
     let totalIngresos = 0;
@@ -120,12 +128,14 @@ export class ReportesComponent implements OnInit {
     this.barChartData.datasets[0].data = ingresosData;
     this.barChartData.datasets[1].data = gastosData;
 
-    // 3. Actualizar gráfico de líneas
-    this.updateLineChart();
+    // Actualizar el gráfico de líneas solo si ya se ha creado la instancia
+    if (this.chart) {
+      this.updateLineChart();
+    }
   }
 
   // Crear el gráfico de líneas
-  createLineChart() {
+  createLineChart(): void {
     if (!this.lineChart) return;
 
     this.chart = new Chart(this.lineChart.nativeElement, {
@@ -156,29 +166,41 @@ export class ReportesComponent implements OnInit {
     });
   }
 
-  // Actualizar gráfico de líneas con datos
-  updateLineChart() {
+  // Actualizar gráfico de líneas con datos (versión ordenada por mes)
+  updateLineChart(): void {
     if (!this.chart) return;
 
-    const grouped: { [key: string]: { ingreso: number; gasto: number } } = {};
+    // Agrupar las transacciones usando el índice del mes (0 = enero, 11 = diciembre)
+    const grouped: {
+      [monthIndex: number]: { ingreso: number; gasto: number };
+    } = {};
 
     this.transactions.forEach((t) => {
-      const month = t.date.toLocaleString('default', { month: 'short' });
-
-      if (!grouped[month]) {
-        grouped[month] = { ingreso: 0, gasto: 0 };
+      const monthIndex = t.date.getMonth();
+      if (!grouped[monthIndex]) {
+        grouped[monthIndex] = { ingreso: 0, gasto: 0 };
       }
-
       if (t.type === 'ingreso') {
-        grouped[month].ingreso += t.amount;
+        grouped[monthIndex].ingreso += t.amount;
       } else {
-        grouped[month].gasto += t.amount;
+        grouped[monthIndex].gasto += t.amount;
       }
     });
 
-    const labels = Object.keys(grouped);
-    const ingresos = labels.map((month) => grouped[month].ingreso);
-    const gastos = labels.map((month) => grouped[month].gasto);
+    // Obtener los índices de mes en orden ascendente
+    const sortedMonthIndices = Object.keys(grouped)
+      .map(Number)
+      .sort((a, b) => a - b);
+
+    const labels = sortedMonthIndices.map((monthIndex) =>
+      new Date(0, monthIndex).toLocaleString('default', { month: 'short' })
+    );
+    const ingresos = sortedMonthIndices.map(
+      (monthIndex) => grouped[monthIndex].ingreso
+    );
+    const gastos = sortedMonthIndices.map(
+      (monthIndex) => grouped[monthIndex].gasto
+    );
 
     this.chart.data.labels = labels;
     this.chart.data.datasets[0].data = ingresos;

@@ -38,9 +38,14 @@ export class DashboardComponent implements OnInit {
   loadTransactionsFromLocalStorage(): void {
     const data = localStorage.getItem('transactions');
     if (data) {
-      this.transactions = JSON.parse(data);
+      this.transactions = JSON.parse(data).map((t: Transaccion) => ({
+        ...t,
+        date: new Date(t.date)
+      }));
+      this.transactions.sort((a, b) => b.id - a.id);
     }
   }
+  
 
   // Guardar transacciones en localStorage
   saveTransactionsToLocalStorage(): void {
@@ -96,6 +101,10 @@ export class DashboardComponent implements OnInit {
     this.newTransactionType = 'ingreso';
     this.newTransactionAmount = 0;
     this.newTransactionCategory = '';
-    this.newTransactionDate = new Date().toISOString().split('T')[0];
+    const today = new Date();
+    const day = String(today.getDate()).padStart(2, '0'); 
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // Meses empiezan en 0
+    const year = today.getFullYear();
+    this.newTransactionDate = `${day}/${month}/${year}`;
   }
 }
