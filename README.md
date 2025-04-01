@@ -2,6 +2,8 @@
 
 [Evidencia](evidencia.pdf)
 
+FrontEnd = http://localhost:4200/
+BackEnd = http://localhost:3000/
 
 Se pide lo siguiente:
 
