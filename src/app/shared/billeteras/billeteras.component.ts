@@ -1,49 +1,34 @@
-<<<<<<< HEAD
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Transaccion } from '../../interfaz/transaccion';
-=======
-import { Component } from '@angular/core';
->>>>>>> origin/Andrea_DelPino2
+import { RecursosService } from '../../servicios/recursos.service';
 
 @Component({
   selector: 'app-billeteras',
   standalone: true,
-<<<<<<< HEAD
   imports: [ CommonModule ],
   templateUrl: './billeteras.component.html',
   styleUrl: './billeteras.component.css'
 })
 export class BilleterasComponent implements OnInit {
-
   transactions: Transaccion[] = [];
 
+  constructor(private transaccionService: RecursosService) {}
+
   ngOnInit(): void {
-    this.loadTransactionsFromLocalStorage();
+    this.transaccionService.getAll().subscribe((data) => {
+      this.transactions = data;
+    });
   }
 
-  loadTransactionsFromLocalStorage(): void {
-    const data = localStorage.getItem('transactions');
-    if (data) {
-      this.transactions = JSON.parse(data);
-
-      this.transactions.forEach(t => {
-        t.date = new Date(t.date);
-      });
+  deleteTransaction(id?: number): void {
+    console.log(id)
+    if (!id) {
+      console.warn('ID no válido para eliminar:', id) 
+      return;
     }
-  }
-
-  deleteTransaction(id: number): void {
-    this.transactions = this.transactions.filter(t => t.id !== id);
-    localStorage.setItem('transactions', JSON.stringify(this.transactions));
+    this.transaccionService.delete(id).subscribe(() => {
+      this.transactions = this.transactions.filter(t => t.id !== id);
+    });
   }
 }
-=======
-  imports: [],
-  templateUrl: './billeteras.component.html',
-  styleUrl: './billeteras.component.css'
-})
-export class BilleterasComponent {
-
-}
->>>>>>> origin/Andrea_DelPino2

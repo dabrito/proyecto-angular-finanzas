@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Transaccion  } from '../../interfaz/transaccion';
+import { RecursosService } from '../../servicios/recursos.service';
+import { Categoria } from '../../interfaz/categoria';
+import { CategoriaService } from '../../servicios/categoria.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,94 +14,78 @@ import { Transaccion  } from '../../interfaz/transaccion';
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
-
-  // Arreglo de transacciones
   transactions: Transaccion[] = [];
+  categorias: Categoria[] = [];
+  ingresos = 0;
+  gastos = 0;
+  total = 0;
 
-  // Variables para el balance
-  ingresos: number = 0;
-  gastos: number = 0;
-  total: number = 0;
-
-  // Campos para la nueva transacción
   newTransactionType: 'ingreso' | 'gasto' = 'ingreso';
-  newTransactionAmount: number = 0;
-  newTransactionCategory: string = '';
-  // Usamos string aquí para luego parsearlo a Date
-  newTransactionDate: string = '';
+  newTransactionAmount = 0;
+  newTransactionCategoryId: number = 0;
+  newTransactionDate = '';
+
+  constructor(
+    private transaccionService: RecursosService,
+    private categoriaService: CategoriaService
+  ) {}
 
   ngOnInit(): void {
-    this.loadTransactionsFromLocalStorage();
-    this.calculateBalance();
-    // Por defecto, fecha de hoy en formato YYYY-MM-DD
     this.newTransactionDate = new Date().toISOString().split('T')[0];
+    this.loadTransacciones();
+    this.loadCategorias();
   }
 
-  // Cargar transacciones de localStorage
-  loadTransactionsFromLocalStorage(): void {
-    const data = localStorage.getItem('transactions');
-    if (data) {
-      this.transactions = JSON.parse(data);
-    }
+  loadCategorias(): void {
+    this.categoriaService.getAll().subscribe({
+      next: (data) => {
+        this.categorias = data;
+      },
+      error: (err) => {
+        console.error('Error al cargar categorías:', err);
+      }
+    });
   }
 
-  // Guardar transacciones en localStorage
-  saveTransactionsToLocalStorage(): void {
-    localStorage.setItem('transactions', JSON.stringify(this.transactions));
+  loadTransacciones(): void {
+    this.transaccionService.getAll().subscribe(data => {
+      this.transactions = data.filter(t => t.id !== undefined).sort((a, b) => (b.id ?? 0) - (a.id ?? 0));
+      this.calculateBalance();
+    });
   }
 
-  // Agregar nueva transacción
   addTransaction(): void {
-    // Validar campos
-    if (!this.newTransactionAmount || !this.newTransactionCategory) {
+    if (!this.newTransactionAmount || !this.newTransactionCategoryId) {
+      console.log('Faltan campos');
       alert('Por favor completa todos los campos');
       return;
     }
 
-    const newTrans: Transaccion = {
-      id: Date.now(), // identificador sencillo basado en la hora actual
+    const nueva: Transaccion = {
       type: this.newTransactionType,
       amount: this.newTransactionAmount,
-      category: this.newTransactionCategory,
-      date: new Date(this.newTransactionDate)
+      categoryId: this.newTransactionCategoryId,
+      date: this.newTransactionDate
     };
 
-    // Agregamos al arreglo
-    this.transactions.push(newTrans);
-    // Guardamos en localStorage
-    this.saveTransactionsToLocalStorage();
-    // Recalculamos el balance
-    this.calculateBalance();
-    // Reseteamos el formulario
-    this.resetForm();
+    this.transaccionService.create(nueva).subscribe(res => {
+      this.transactions.unshift(res);
+      this.calculateBalance();
+      this.loadTransacciones();
+      this.resetForm();
+    });
   }
 
-  // Calcular los totales
   calculateBalance(): void {
-    this.ingresos = 0;
-    this.gastos = 0;
-
-    for (const trans of this.transactions) {
-      if (trans.type === 'ingreso') {
-        this.ingresos += trans.amount;
-      } else {
-        this.gastos += trans.amount;
-      }
-    }
-
+    this.ingresos = this.transactions.filter(t => t.type === 'ingreso').reduce((s, t) => s + t.amount, 0);
+    this.gastos = this.transactions.filter(t => t.type === 'gasto').reduce((s, t) => s + t.amount, 0);
     this.total = this.ingresos - this.gastos;
-<<<<<<< HEAD
-=======
-
-    
->>>>>>> origin/Andrea_DelPino2
   }
 
-  // Reiniciar los campos del formulario
   resetForm(): void {
     this.newTransactionType = 'ingreso';
     this.newTransactionAmount = 0;
-    this.newTransactionCategory = '';
+    this.newTransactionCategoryId = 0;
     this.newTransactionDate = new Date().toISOString().split('T')[0];
   }
 }

@@ -1,29 +1,24 @@
-<<<<<<< HEAD
-import { Component, OnInit  } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Transaccion } from '../../interfaz/transaccion';
+import { RecursosService } from '../../servicios/recursos.service';
 import { ChartOptions, ChartType, ChartData } from 'chart.js';
-import { BaseChartDirective  } from 'ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
 
-import { Chart, DoughnutController, BarController, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend } from 'chart.js';
-Chart.register( DoughnutController, BarController, ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend );
-=======
-import { Component, AfterViewInit, ElementRef, ViewChild } from '@angular/core';
-import { Chart } from 'chart.js/auto';
-import { Transaccion  } from '../../interfaz/transaccion';
->>>>>>> origin/Andrea_DelPino2
+import { Chart, DoughnutController, BarController, LineController, ArcElement, BarElement, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend, } from 'chart.js';
+Chart.register( DoughnutController, BarController, LineController, ArcElement, BarElement, LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend );
 
 @Component({
   selector: 'app-reportes',
   standalone: true,
-<<<<<<< HEAD
-  imports: [ CommonModule, BaseChartDirective ],
+  imports: [CommonModule, BaseChartDirective],
   templateUrl: './reportes.component.html',
-  styleUrl: './reportes.component.css'
+  styleUrls: ['./reportes.component.css'],
 })
-export class ReportesComponent implements OnInit {
+export class ReportesComponent implements OnInit, AfterViewInit {
+  @ViewChild('lineChart') lineChart!: ElementRef;
+  chart!: Chart;
 
-  // Arreglo de transacciones
   transactions: Transaccion[] = [];
 
   // CONFIGURACIÓN DEL GRÁFICO DE DONA: Ingresos vs Gastos
@@ -31,10 +26,12 @@ export class ReportesComponent implements OnInit {
   public doughnutChartData: ChartData<'doughnut'> = {
     labels: this.doughnutChartLabels,
     datasets: [
-      { data: [0, 0],
-        backgroundColor: ['rgba(75,192,192,0.6)', 'rgba(255,99,132,0.6)']
-      }
-    ]
+      {
+        data: [0, 0],
+        borderColor: ['blue', 'red'],
+        backgroundColor: ['rgba(0, 0, 255, 0.2)', 'rgba(255,99,132,0.6)'],
+      },
+    ],
   };
   public doughnutChartType: ChartType = 'doughnut';
   public doughnutChartOptions: ChartOptions = { responsive: true };
@@ -47,42 +44,42 @@ export class ReportesComponent implements OnInit {
       {
         data: [],
         label: 'Ingresos',
-        backgroundColor: 'rgba(75,192,192,0.6)'
+        borderColor: 'blue',
+        backgroundColor: 'rgba(0, 0, 255, 0.2)',
       },
       {
         data: [],
         label: 'Gastos',
-        backgroundColor: 'rgba(255,99,132,0.6)'
-      }
-    ]
+        borderColor: 'red',
+        backgroundColor: 'rgba(255, 0, 0, 0.2)',
+      },
+    ],
   };
   public barChartType: ChartType = 'bar';
   public barChartOptions: ChartOptions = { responsive: true };
 
-  constructor() { }
+  constructor(private transaccionService: RecursosService) {}
 
   ngOnInit(): void {
-    this.loadTransactions();
+    this.transaccionService.getAll().subscribe((data) => {
+      this.transactions = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+      // this.transactions = data;
+      this.updateCharts();
+    });
   }
 
-  // Cargar transacciones desde localStorage
-  loadTransactions(): void {
-    const data = localStorage.getItem('transactions');
-    if (data) {
-      this.transactions = JSON.parse(data);
-      this.transactions.forEach(t => {
-        t.date = new Date(t.date);
-      });
-    }
-    this.updateCharts();
+  // Se utiliza AfterViewInit para garantizar que el canvas ya esté disponible
+  ngAfterViewInit(): void {
+    this.createLineChart();
+    this.updateLineChart();
   }
 
-  // Actualizar los datos de los gráficos
+  // Actualizar los datos de los gráficos de dona y barras, y el de líneas si existe
   updateCharts(): void {
     // 1. Gráfico de dona: Total de ingresos y gastos
     let totalIngresos = 0;
     let totalGastos = 0;
-    this.transactions.forEach(t => {
+    this.transactions.forEach((t) => {
       if (t.type === 'ingreso') {
         totalIngresos += t.amount;
       } else {
@@ -95,59 +92,44 @@ export class ReportesComponent implements OnInit {
     const ingresosPorCategoria: { [key: string]: number } = {};
     const gastosPorCategoria: { [key: string]: number } = {};
 
-    this.transactions.forEach(t => {
+    this.transactions.forEach((t) => {
+      const categoriaKey = `Categoria ${t.categoryId}`; // puedes cambiar esto si tienes el nombre real
       if (t.type === 'ingreso') {
-        ingresosPorCategoria[t.category] = (ingresosPorCategoria[t.category] || 0) + t.amount;
+        ingresosPorCategoria[categoriaKey] = (ingresosPorCategoria[categoriaKey] || 0) + t.amount;
       } else {
-        gastosPorCategoria[t.category] = (gastosPorCategoria[t.category] || 0) + t.amount;
+        gastosPorCategoria[categoriaKey] = (gastosPorCategoria[categoriaKey] || 0) + t.amount;
       }
     });
 
     // Crear una lista de categorías (unión de ambas)
-    const categorias = Array.from(new Set([
-      ...Object.keys(ingresosPorCategoria),
-      ...Object.keys(gastosPorCategoria)
-    ]));
+    const categorias = Array.from(
+      new Set([
+        ...Object.keys(ingresosPorCategoria),
+        ...Object.keys(gastosPorCategoria),
+      ])
+    );
     this.barChartLabels = categorias;
     this.barChartData.labels = categorias;
 
     // Datos para cada categoría (si no existe se asume 0)
-    const ingresosData = categorias.map(cat => ingresosPorCategoria[cat] || 0);
-    const gastosData = categorias.map(cat => gastosPorCategoria[cat] || 0);
+    const ingresosData = categorias.map(
+      (cat) => ingresosPorCategoria[cat] || 0
+    );
+    const gastosData = categorias.map((cat) => gastosPorCategoria[cat] || 0);
 
     this.barChartData.datasets[0].data = ingresosData;
     this.barChartData.datasets[1].data = gastosData;
-  }
-}
-=======
-  templateUrl: './reportes.component.html',
-  styleUrls: ['./reportes.component.css']
-})
-export class ReportesComponent implements AfterViewInit {
 
-  @ViewChild('lineChart') lineChart!: ElementRef;
-  chart!: Chart;
-
-  constructor() {}
-
-  ngAfterViewInit() {
-    this.createChart();
-    this.updateChart();
-  }
-
-  // Getter que accede directamente a localStorage
-  get transactions(): Transaccion[] {
-    const data = localStorage.getItem('transactions');
-    if (data) {
-      return JSON.parse(data).map((t: Transaccion) => ({
-        ...t,
-        date: new Date(t.date) // Convertir fecha de string a Date
-      }));
+    // Actualizar el gráfico de líneas solo si ya se ha creado la instancia
+    if (this.chart) {
+      this.updateLineChart();
     }
-    return [];
   }
 
-  createChart() {
+  // Crear el gráfico de líneas
+  createLineChart(): void {
+    if (!this.lineChart) return;
+
     this.chart = new Chart(this.lineChart.nativeElement, {
       type: 'line',
       data: {
@@ -158,48 +140,59 @@ export class ReportesComponent implements AfterViewInit {
             data: [],
             borderColor: 'blue',
             backgroundColor: 'rgba(0, 0, 255, 0.2)',
-            borderWidth: 2
+            borderWidth: 2,
           },
           {
             label: 'Gastos',
             data: [],
             borderColor: 'red',
             backgroundColor: 'rgba(255, 0, 0, 0.2)',
-            borderWidth: 2
-          }
-        ]
+            borderWidth: 2,
+          },
+        ],
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false
-      }
+        maintainAspectRatio: false,
+      },
     });
   }
 
-  updateChart() {
+  // Actualizar gráfico de líneas con datos (versión ordenada por mes)
+  updateLineChart(): void {
     if (!this.chart) return;
 
-    const transactions = this.transactions; // Obtiene las transacciones usando el getter
+    // Agrupar las transacciones usando el índice del mes (0 = enero, 11 = diciembre)
+    const grouped: {
+      [monthIndex: number]: { ingreso: number; gasto: number };
+    } = {};
 
-    const grouped: { [key: string]: { ingreso: number; gasto: number } } = {};
-
-    transactions.forEach((t) => {
-      const month = t.date.toLocaleString('default', { month: 'short' });
-
-      if (!grouped[month]) {
-        grouped[month] = { ingreso: 0, gasto: 0 };
+    this.transactions.forEach((t) => {
+      const monthIndex = new Date(t.date).getMonth();
+      if (!grouped[monthIndex]) {
+        grouped[monthIndex] = { ingreso: 0, gasto: 0 };
       }
-
       if (t.type === 'ingreso') {
-        grouped[month].ingreso += t.amount;
+        grouped[monthIndex].ingreso += t.amount;
       } else {
-        grouped[month].gasto += t.amount;
+        grouped[monthIndex].gasto += t.amount;
       }
     });
 
-    const labels = Object.keys(grouped);
-    const ingresos = labels.map((month) => grouped[month].ingreso);
-    const gastos = labels.map((month) => grouped[month].gasto);
+    // Obtener los índices de mes en orden ascendente
+    const sortedMonthIndices = Object.keys(grouped)
+      .map(Number)
+      .sort((a, b) => a - b);
+
+    const labels = sortedMonthIndices.map((monthIndex) =>
+      new Date(0, monthIndex).toLocaleString('default', { month: 'short' })
+    );
+    const ingresos = sortedMonthIndices.map(
+      (monthIndex) => grouped[monthIndex].ingreso
+    );
+    const gastos = sortedMonthIndices.map(
+      (monthIndex) => grouped[monthIndex].gasto
+    );
 
     this.chart.data.labels = labels;
     this.chart.data.datasets[0].data = ingresos;
@@ -207,4 +200,3 @@ export class ReportesComponent implements AfterViewInit {
     this.chart.update();
   }
 }
->>>>>>> origin/Andrea_DelPino2

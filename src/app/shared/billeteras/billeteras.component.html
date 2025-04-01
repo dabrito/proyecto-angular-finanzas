@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <div class="container-fluid p-3" style="height: 100vh; overflow-y: auto;">
   <table class="table table-bordered table-hover w-100">
     <thead class="table-dark">
@@ -12,8 +11,8 @@
     </thead>
     <tbody>
       <tr *ngFor="let t of transactions">
-        <td>{{ t.date | date:'shortDate' }}</td>
-        <td>{{ t.category }}</td>
+        <td>{{ t.date | date:'dd/MM/yyyy' }}</td>
+        <td>{{ t.categoria?.nombre || ('Categoría ' + t.categoryId) }}</td>
         <td>{{ t.amount | currency:'USD' }}</td>
         <td>{{ t.type }}</td>
         <td>
@@ -23,6 +22,3 @@
     </tbody>
   </table>
 </div>
-=======
-<p>billeteras works!</p>
->>>>>>> origin/Andrea_DelPino2
