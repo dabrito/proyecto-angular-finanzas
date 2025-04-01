@@ -1,10 +1,15 @@
+<<<<<<< HEAD
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Transaccion } from '../../interfaz/transaccion';
+=======
+import { Component } from '@angular/core';
+>>>>>>> origin/Andrea_DelPino2
 
 @Component({
   selector: 'app-billeteras',
   standalone: true,
+<<<<<<< HEAD
   imports: [ CommonModule ],
   templateUrl: './billeteras.component.html',
   styleUrl: './billeteras.component.css'
@@ -33,3 +38,12 @@ export class BilleterasComponent implements OnInit {
     localStorage.setItem('transactions', JSON.stringify(this.transactions));
   }
 }
+=======
+  imports: [],
+  templateUrl: './billeteras.component.html',
+  styleUrl: './billeteras.component.css'
+})
+export class BilleterasComponent {
+
+}
+>>>>>>> origin/Andrea_DelPino2

@@ -3,6 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ListResponse } from '../interfaz/currencyList';
 import { LiveResponse } from '../interfaz/currencyLive';
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Andrea_DelPino2
 @Injectable({
   providedIn: 'root'
 })

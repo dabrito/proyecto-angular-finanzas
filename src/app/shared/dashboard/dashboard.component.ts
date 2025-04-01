@@ -87,6 +87,11 @@ export class DashboardComponent implements OnInit {
     }
 
     this.total = this.ingresos - this.gastos;
+<<<<<<< HEAD
+=======
+
+    
+>>>>>>> origin/Andrea_DelPino2
   }
 
   // Reiniciar los campos del formulario
