@@ -1,7 +1,8 @@
 export interface Transaccion {
-  id: number;
+  id?: number;
   type: 'ingreso' | 'gasto';
   amount: number;
-  category: string;
-  date: Date;
+  categoryId: number;
+  date: string;
+  categoria?: { nombre: string }; // opcional para mostrar nombre
 }
