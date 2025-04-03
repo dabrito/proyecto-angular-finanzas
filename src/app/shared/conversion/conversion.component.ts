@@ -12,7 +12,7 @@ import { LiveResponse } from '../../interfaz/currencyLive';
   imports: [CommonModule, FormsModule, HttpClientModule],
   providers: [RecursosService],
   templateUrl: './conversion.component.html',
-  styleUrl: './conversion.component.css'
+  styleUrls: ['./conversion.component.css']
 })
 export class ConversionComponent implements OnInit {
 
@@ -27,6 +27,7 @@ export class ConversionComponent implements OnInit {
   fromCurrency: string = 'USD';
   toCurrency: string = 'EUR';
   convertedValue: number = 0;
+  historial: any;
 
   constructor(private recursosService: RecursosService) {}
 
@@ -65,37 +66,24 @@ export class ConversionComponent implements OnInit {
     });
   }
 
+  // Método para hacer la conversión utilizando el backend
   convert(): void {
     if (!this.amount || !this.fromCurrency || !this.toCurrency) {
       alert('Por favor, completa todos los campos');
       return;
     }
 
-    if (!this.quotes) {
-      alert('No se ha cargado la información de tipos de cambio');
-      return;
-    }
-
-    let fromToUSD = 1;
-    if (this.fromCurrency !== 'USD') {
-      const keyFrom = `USD${this.fromCurrency}`;
-      if (!this.quotes[keyFrom]) {
-        alert(`No se encontró tipo de cambio para ${this.fromCurrency}`);
-        return;
+    // Llamar al backend para hacer la conversión
+    this.recursosService.convertir(this.amount, this.fromCurrency, this.toCurrency).subscribe(
+      (response) => {
+        // Recibimos el historial de la conversión
+        this.historial = response.historial;
+        this.convertedValue = this.historial.monto_convertido;
+      },
+      (error) => {
+        console.error('Error en la conversión:', error);
+        alert('Hubo un error al realizar la conversión');
       }
-      fromToUSD = 1 / this.quotes[keyFrom];
-    }
-
-    let usdToTo = 1;
-    if (this.toCurrency !== 'USD') {
-      const keyTo = `USD${this.toCurrency}`;
-      if (!this.quotes[keyTo]) {
-        alert(`No se encontró tipo de cambio para ${this.toCurrency}`);
-        return;
-      }
-      usdToTo = this.quotes[keyTo];
-    }
-
-    this.convertedValue = this.amount * fromToUSD * usdToTo;
+    );
   }
 }

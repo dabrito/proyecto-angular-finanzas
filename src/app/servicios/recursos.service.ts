@@ -11,6 +11,7 @@ import { Transaccion } from '../interfaz/transaccion';
 })
 export class RecursosService {
   private api = 'http://localhost:3000/api/transacciones';
+  private apiConvert = 'http://localhost:3000/api/convert'; 
   private baseUrl = 'https://api.exchangerate.host';
   private apiKey = '2dfc4f27f1c8c94842dba3872ff2123c'; // tu API key
   // private apiKey = '2dfc4f27f1c8c94842dba3872ff1123c'; // API con fallo interno para que no consuma 
@@ -37,5 +38,15 @@ export class RecursosService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.api}/${id}`);
+  }
+
+  // Método para realizar la conversión
+  convertir(montoOrigen: number, monedaOrigen: string, monedaDestino: string): Observable<any> {
+    // Envía los datos al backend para realizar la conversión
+    return this.http.post<any>(this.apiConvert, {
+      monto_origen: montoOrigen,
+      moneda_origen: monedaOrigen,
+      moneda_destino: monedaDestino
+    });
   }
 }
