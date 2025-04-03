@@ -1,8 +1,62 @@
-<div>
-  <h2>Crear Nueva Meta</h2>
-  <input type="text" [(ngModel)]="interfaz.tipoMeta" placeholder="Tipo Meta" />
-  <input type="text" [(ngModel)]="interfaz.objetivoMeta" placeholder="Objetivo Meta" />
-  <input type="number" [(ngModel)]="interfaz.montoMeta" placeholder="Monto Meta" />
-  <input type="date" [(ngModel)]="interfaz.fechaMeta" placeholder="Fecha Meta" />
-  <button (click)="crearMeta()">Crear Meta</button>
+<div class="container">
+  <h2>Gestión de Metas</h2>
+  
+  <form (ngSubmit)="crearMeta()" #metaForm="ngForm">
+    <div class="form-group">
+      <label for="objetivoMeta">Objetivo</label>
+      <input type="text" id="objetivoMeta" [(ngModel)]="interfaz.objetivoMeta" name="objetivoMeta" class="form-control" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="periodo">Periodo</label>
+      <select id="periodo" [(ngModel)]="interfaz.periodoId" name="periodo" class="form-control" required>
+        <option *ngFor="let tipo of objetivosMeta" [value]="tipo.id">{{ tipo.nombre }}</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label for="montoMeta">Monto</label>
+      <input type="number" id="montoMeta" [(ngModel)]="interfaz.montoMeta" name="montoMeta" class="form-control" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="fechaMeta">Fecha</label>
+      <input type="date" id="fechaMeta" [(ngModel)]="interfaz.fechaMeta" name="fechaMeta" class="form-control" required>
+    </div>
+    
+    <button type="submit" class="btn btn-success" [disabled]="!metaForm.form.valid">Guardar</button>
+  </form>
+  
+  <hr>
+  
+  <h3>Lista de Metas</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Objetivo</th>
+        <th>Periodo</th>
+        <th>Monto</th>
+        <th>Fecha</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let meta of metas; trackBy: trackByMeta">
+        <td>{{ meta.objetivoMeta }}</td>
+        <td>{{ meta.periodoId }}</td>
+        <td>{{ meta.montoMeta }}</td>
+        <td>{{ meta.fechaMeta }}</td>
+        <td>
+          <button class="btn btn-warning" (click)="seleccionarMeta(meta)">Editar</button>
+          <button *ngIf="meta.id !== undefined" class="btn btn-danger" (click)="eliminarMeta(meta.id!)">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
+
+
+
+

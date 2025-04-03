@@ -36,6 +36,7 @@ router.post('/', async (req, res) => {
     const meta = await Meta.create(req.body);
     res.status(201).json(meta);
   } catch (error) {
+    console.error(err);
     res.status(400).json({ message: error.message });
   }
 });
@@ -60,15 +61,15 @@ router.put('/:id', async (req, res) => {
 // Eliminar una meta
 router.delete('/:id', async (req, res) => {
   try {
-    const deleted = await Meta.destroy({
-      where: { id_meta: req.params.id },
-    });
+    const id = req.params.id;
+    const deleted = await Transaccion.destroy({ where: { id } });
     if (deleted) {
       res.status(204).send();
     } else {
       res.status(404).json({ message: 'Meta no encontrada' });
     }
   } catch (error) {
+    console.error(err);
     res.status(500).json({ message: error.message });
   }
 });

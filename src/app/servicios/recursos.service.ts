@@ -9,6 +9,7 @@ import { Transaccion } from '../interfaz/transaccion';
 import { Categoria } from '../interfaz/categoria';
 import { Tipo } from '../interfaz/tipo';
 import { Meta } from '../interfaz/metas';
+import { Periodo } from '../interfaz/periodo';
 
 
 @Injectable({providedIn: 'root'})
@@ -17,6 +18,7 @@ export class RecursosService {
   private apitipos = 'http://localhost:3000/api/tipos';
   private apicategorias = 'http://localhost:3000/api/categorias';
   private apimetas = 'http://localhost:3000/api/metas';
+  private apiperiodos = 'http://localhost:3000/api/periodos';
 
   private apiConvert = 'http://localhost:3000/api/convert';
   
@@ -46,6 +48,13 @@ export class RecursosService {
   getAllTipos(): Observable<Tipo[]> {
     return this.http.get<Tipo[]>(this.apitipos);
   }
+  getAllMetas(): Observable<Meta[]> {
+    return this.http.get<Meta[]>(this.apimetas);
+  }
+
+  getAllPeriodos(): Observable<Periodo[]> {
+    return this.http.get<Periodo[]>(this.apiperiodos);
+  }
 
   create(transaccion: Transaccion): Observable<Transaccion> {
     return this.http.post<Transaccion>(this.apitransacciones, transaccion);
@@ -65,13 +74,8 @@ export class RecursosService {
     });
   }
 
-  getMetas(): Observable<Meta[]> {
-    return this.http.get<Meta[]>(`${this.apimetas}/metas`);
-  }
-
   createMeta(meta: Meta): Observable<Meta> {
-    console.log(this.apimetas); // Verificar la URL
-    return this.http.post<Meta>(`${this.apimetas}`, meta);
+    return this.http.post<Meta>(this.apimetas, meta);
   }
 
   updateMeta(id: number, meta: Meta): Observable<Meta> {
@@ -79,6 +83,6 @@ export class RecursosService {
   }
 
   deleteMeta(id: number): Observable<void> {
-    return this.http.delete<void>(`<span class="math-inline">\{this\.apiUrl\}/metas/</span>{id}`);
+    return this.http.delete<void>(`${this.apimetas}/${id}`);
   }
 }

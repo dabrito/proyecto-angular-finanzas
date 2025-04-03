@@ -3,18 +3,18 @@
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Meta', {
-      id_meta: {
+      id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      id_periodo: { // Clave foránea
+      periodoId: {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: {
-          model: 'Periodos', // Nombre correcto de la tabla referenciada
-          key: 'id_periodo'
+          model: 'Periodos',
+          key: 'periodoId'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'

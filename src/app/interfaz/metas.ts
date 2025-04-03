@@ -1,10 +1,10 @@
 export interface Meta {
-    id?: number;
-    tipoMeta: string;
-    objetivoMeta: string;
-    montoMeta: number;
-    fechaMeta: string;
-  }
-  
+  id?: number;
+  objetivoMeta: string;
+  montoMeta: number;
+  fechaMeta: string;
+  periodoId: number;
+  periodo?: { nombre: string };
+}
   
   

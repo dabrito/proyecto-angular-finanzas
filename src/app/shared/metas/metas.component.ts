@@ -1,72 +1,101 @@
 import { Component, OnInit } from '@angular/core';
+import { RecursosService } from '../../servicios/recursos.service';
+import { Meta } from '../../interfaz/metas';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { Meta } from '../../interfaz/metas';
-import { RecursosService } from '../../servicios/recursos.service';
-
-interface Interfaz {
-  tipoMeta: string;
-  objetivoMeta: string;
-  montoMeta: number;
-  fechaMeta: string;
-}
-
-interface MetaSeleccionada extends Meta {}
-
 @Component({
   selector: 'app-metas',
-  templateUrl: './metas.component.html',
-  styleUrls: ['./metas.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule], // Agregar FormsModule aqu
+  templateUrl: './metas.component.html',
+  styleUrls: ['./metas.component.css']
 })
-export class MetasComplements implements OnInit {
+export class MetasComponent implements OnInit {
   metas: Meta[] = [];
-  interfaz: Interfaz = {
-    tipoMeta: '',
+  metaSeleccionada: Meta | null = null;
+  interfaz: Meta = {
     objetivoMeta: '',
     montoMeta: 0,
     fechaMeta: new Date().toISOString().split('T')[0],
+    periodoId: 0
   };
-  metaSeleccionada: MetaSeleccionada | null = null; // Inicialización correcta
+
+  objetivosMeta = [
+    { id: 1, nombre: 'Ahorro para vivienda' },
+    { id: 2, nombre: 'Educación' },
+    { id: 3, nombre: 'Emergencias' },
+  ];
+
+  trackByMeta(index: number, meta: Meta): number {
+    return meta.id ?? index; // Devuelve el id o el índice como identificador único
+  }
 
   constructor(private Service: RecursosService) {}
 
   ngOnInit(): void {
-    this.cargarMetas();
+    this.loadMetas();
   }
 
-  cargarMetas(): void {
-    this.Service.getMetas().subscribe({
-      next: (metas) => {
-        this.metas = metas;
-      },
-      error: (err: any) => {
-        console.error('Error al cargar metas:', err);
-        alert('Error al cargar metas. Por favor, inténtelo de nuevo.');
-      },
+  loadMetas(): void {
+    this.Service.getAllMetas().subscribe((data: Meta[]) => {
+      this.metas = data;
     });
+  }
+
+  eliminarMeta(id: number | undefined): void {
+    if (id !== undefined) {
+      this.Service.deleteMeta(id).subscribe(() => {
+        this.loadMetas();
+      });
+    }
   }
 
   crearMeta(): void {
     this.Service.createMeta(this.interfaz).subscribe({
       next: () => {
-        this.cargarMetas();
+        this.loadMetas();
         this.interfaz = {
-          tipoMeta: '',
-          objetivoMeta: '',
-          montoMeta: 0,
+          objetivoMeta: this.interfaz.objetivoMeta,
+          montoMeta: this.interfaz.montoMeta,
           fechaMeta: new Date().toISOString().split('T')[0],
+          periodoId: 0
         };
-      },
-      error: (err: any) => {
-        console.error('Error al crear meta:', err);
-        alert('Error al crear meta. Por favor, inténtelo de nuevo.');
-      },
+      }
     });
   }
 
+  guardarNuevaMeta(): void {
+    // Crear el objeto nuevaMeta con los valores de la propiedad interfaz
+    const nuevaMeta: Meta = {
+      objetivoMeta: this.interfaz.objetivoMeta,
+      montoMeta: this.interfaz.montoMeta,
+      fechaMeta: this.interfaz.fechaMeta,
+      periodoId: this.interfaz.periodoId
+    };
+
+    // Verificar que el servicio esté definido antes de usarlo
+    if (this.Service) {
+      // Llamar al servicio para guardar la nueva meta en la base de datos
+      this.Service.createMeta(nuevaMeta).subscribe(res => {
+        // Lógica posterior: agregar la nueva meta a la lista o limpiar el formulario
+        this.metas.push(res); // Añadir la nueva meta a la lista de metas
+        alert('Meta agregada exitosamente');
+        this.resetForm(); // Limpiar el formulario después de agregar
+      });
+    }
+  }
+
+  resetForm(): void {
+    // Reiniciar los campos del formulario
+    this.interfaz = {
+      objetivoMeta: '',
+      montoMeta: 0,
+      fechaMeta: new Date().toISOString().split('T')[0],
+      periodoId: 0
+    };
+  }
   seleccionarMeta(meta: Meta): void {
     this.metaSeleccionada = { ...meta };
   }
@@ -75,30 +104,12 @@ export class MetasComplements implements OnInit {
     if (this.metaSeleccionada && this.metaSeleccionada.id) {
       this.Service.updateMeta(this.metaSeleccionada.id, this.metaSeleccionada).subscribe({
         next: () => {
-          this.cargarMetas();
-          this.metaSeleccionada = null; // Asignar null después de la actualización
-        },
-        error: (err: any) => {
-          console.error('Error al actualizar meta:', err);
-          alert('Error al actualizar meta. Por favor, inténtelo de nuevo.');
-        },
+          this.loadMetas();
+          this.metaSeleccionada = null;
+        }
       });
     }
   }
-
-  eliminarMeta(id: number): void {
-    this.Service.deleteMeta(id).subscribe({
-      next: () => {
-        this.cargarMetas();
-      },
-      error: (err: any) => {
-        console.error('Error al eliminar meta:', err);
-        alert('Error al eliminar meta. Por favor, inténtelo de nuevo.');
-      },
-    });
-  }
-
-  trackByMeta(index: number, meta: Meta): number {
-    return meta.id || index;
-  }
 }
+
+ 
