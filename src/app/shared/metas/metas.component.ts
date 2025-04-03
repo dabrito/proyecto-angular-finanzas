@@ -28,6 +28,15 @@ export class MetasComponent implements OnInit {
     { id: 3, nombre: 'Emergencias' },
   ];
 
+  meta = {
+    objetivo: '',
+    semana: 0,
+    periodo: '',
+    educacion: '',
+    monto: 0,
+    fecha: ''
+  };
+
   trackByMeta(index: number, meta: Meta): number {
     return meta.id ?? index; // Devuelve el id o el índice como identificador único
   }
@@ -66,24 +75,12 @@ export class MetasComponent implements OnInit {
     });
   }
 
-  guardarNuevaMeta(): void {
-    // Crear el objeto nuevaMeta con los valores de la propiedad interfaz
-    const nuevaMeta: Meta = {
-      objetivoMeta: this.interfaz.objetivoMeta,
-      montoMeta: this.interfaz.montoMeta,
-      fechaMeta: this.interfaz.fechaMeta,
-      periodoId: this.interfaz.periodoId
-    };
-
-    // Verificar que el servicio esté definido antes de usarlo
-    if (this.Service) {
-      // Llamar al servicio para guardar la nueva meta en la base de datos
-      this.Service.createMeta(nuevaMeta).subscribe(res => {
-        // Lógica posterior: agregar la nueva meta a la lista o limpiar el formulario
-        this.metas.push(res); // Añadir la nueva meta a la lista de metas
-        alert('Meta agregada exitosamente');
-        this.resetForm(); // Limpiar el formulario después de agregar
-      });
+  guardarNuevaMeta() {
+    if (this.meta.objetivo && this.meta.semana && this.meta.periodo && this.meta.educacion && this.meta.monto && this.meta.fecha) {
+      // Aquí puedes agregar la lógica para guardar la nueva meta
+      console.log("Nueva meta guardada:", this.meta);
+    } else {
+      console.log("Formulario no válido");
     }
   }
 

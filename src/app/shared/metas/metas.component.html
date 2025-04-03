@@ -1,7 +1,7 @@
 <div class="container">
   <h2>Gestión de Metas</h2>
   
-  <form (ngSubmit)="crearMeta()" #metaForm="ngForm">
+  <form (ngSubmit)="guardarNuevaMeta()" #metaForm="ngForm">
     <div class="form-group">
       <label for="objetivoMeta">Objetivo</label>
       <input type="text" id="objetivoMeta" [(ngModel)]="interfaz.objetivoMeta" name="objetivoMeta" class="form-control" required>
@@ -25,6 +25,7 @@
     </div>
     
     <button type="submit" class="btn btn-success" [disabled]="!metaForm.form.valid">Guardar</button>
+    
   </form>
   
   <hr>
