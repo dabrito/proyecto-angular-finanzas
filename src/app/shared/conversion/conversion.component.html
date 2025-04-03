@@ -36,4 +36,38 @@
   <div class="my-4">
     <button class="btn btn-primary" (click)="convert()">Convertir</button>
   </div>
+
+  <hr style="border: none; height: 1px; background-color: black; width: 100%; margin-bottom: 20px;">
+
+  <div class="container-fluid p-3" style="height: 100vh; overflow-y: auto;">
+    <div class="d-flex justify-content-center">
+      <div class="w-75">
+        <h4 class="text-center mb-4 mt-3">Historial de Conversión</h4>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover">
+            <thead class="border-bottom">
+              <tr class="text-muted text-center">
+                <th>Cantidad</th>
+                <th>Moneda Origen</th>
+                <th>Moneda Destino</th>
+                <th>Valor Convertido</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngIf="historial; else noData" class="text-center">
+                <td>{{ historial.monto_original }}</td>
+                <td>{{ historial.moneda_origen }}</td>
+                <td>{{ historial.moneda_destino }}</td>
+                <td>{{ historial.monto_convertido }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  
+    <ng-template #noData>
+      <p class="text-center text-muted mt-3">No hay datos disponibles.</p>
+    </ng-template>
+  </div>
 </div>

@@ -9,12 +9,12 @@ app.use(express.json());
 const transaccionesRouter = require('./routes/transacciones');
 const categoriasRouter = require('./routes/categorias');
 const tipoRouter = require('./routes/tipo');
-const conversionRoutesRouter = require('./routes/conversionRoutes');
+//const conversionRoutesRouter = require('./routes/conversionRoutes');
 
 app.use('/api/transacciones', transaccionesRouter);
 app.use('/api/categorias', categoriasRouter);
 app.use('/api/tipos', tipoRouter);
-app.use('/api/conversionRouter', conversionRoutesRouter)
+//app.use('/api/conversionRouter', conversionRoutesRouter)
 
 app.listen(3000, () => {
   console.log('Servidor corriendo en http://localhost:3000');
