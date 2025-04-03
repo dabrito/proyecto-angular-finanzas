@@ -16,6 +16,7 @@ export class RecursosService {
   private apitransacciones = 'http://localhost:3000/api/transacciones';
   private apitipos = 'http://localhost:3000/api/tipos';
   private apicategorias = 'http://localhost:3000/api/categorias';
+  private apimetas = 'http://localhost:3000/api/metas';
 
   private apiConvert = 'http://localhost:3000/api/convert';
   
@@ -54,15 +55,6 @@ export class RecursosService {
     return this.http.delete<void>(`${this.apitransacciones}/${id}`);
   }
 
-  getAllMetas() {
-    return this.http.get<Meta[]>('URL_DEL_BACKEND/metas');
-  }
-  
-  createMeta(meta: Meta) {
-    return this.http.post<Meta>('URL_DEL_BACKEND/metas', meta);
-  }
-  
-
   // Método para realizar la conversión
   convertir(montoOrigen: number, monedaOrigen: string, monedaDestino: string): Observable<any> {
     // Envía los datos al backend para realizar la conversión
@@ -71,5 +63,22 @@ export class RecursosService {
       moneda_origen: monedaOrigen,
       moneda_destino: monedaDestino
     });
+  }
+
+  getMetas(): Observable<Meta[]> {
+    return this.http.get<Meta[]>(`${this.apimetas}/metas`);
+  }
+
+  createMeta(meta: Meta): Observable<Meta> {
+    console.log(this.apimetas); // Verificar la URL
+    return this.http.post<Meta>(`${this.apimetas}`, meta);
+  }
+
+  updateMeta(id: number, meta: Meta): Observable<Meta> {
+    return this.http.put<Meta>(`<span class="math-inline">\{this\.apiUrl\}/metas/</span>{id}`, meta);
+  }
+
+  deleteMeta(id: number): Observable<void> {
+    return this.http.delete<void>(`<span class="math-inline">\{this\.apiUrl\}/metas/</span>{id}`);
   }
 }

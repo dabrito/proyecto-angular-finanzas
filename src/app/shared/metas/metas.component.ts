@@ -2,67 +2,103 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { Meta } from '../../interfaz/metas';  // Aquí importas la interfaz de Meta
+import { Meta } from '../../interfaz/metas';
 import { RecursosService } from '../../servicios/recursos.service';
 
+interface Interfaz {
+  tipoMeta: string;
+  objetivoMeta: string;
+  montoMeta: number;
+  fechaMeta: string;
+}
+
+interface MetaSeleccionada extends Meta {}
 
 @Component({
   selector: 'app-metas',
+  templateUrl: './metas.component.html',
+  styleUrls: ['./metas.component.css'],
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './metas.component.html',
-  styleUrls: ['./metas.component.css']
 })
+export class MetasComplements implements OnInit {
+  metas: Meta[] = [];
+  interfaz: Interfaz = {
+    tipoMeta: '',
+    objetivoMeta: '',
+    montoMeta: 0,
+    fechaMeta: new Date().toISOString().split('T')[0],
+  };
+  metaSeleccionada: MetaSeleccionada | null = null; // Inicialización correcta
 
-export class MetasComponent implements OnInit {
-  metas: Meta[] = [];  // Array para las metas
-  tipoMeta = '';  // Campo para tipo de meta
-  objetivoMeta = '';  // Campo para objetivo de la meta
-  montoMeta: number | null = null;  // Campo para monto de la meta
-  fechaMeta = '';  // Campo para fecha de la meta
-
-  constructor(private service: RecursosService) {}
+  constructor(private Service: RecursosService) {}
 
   ngOnInit(): void {
-    this.fechaMeta = new Date().toISOString().split('T')[0];  // Establece la fecha de hoy
-    this.loadMetas();
+    this.cargarMetas();
   }
 
-  // Método para cargar las metas desde el servicio
-  loadMetas(): void {
-    this.service.getAllMetas().subscribe({
-      next: (data) => {
-        this.metas = data.sort((a, b) => (b.id ?? 0) - (a.id ?? 0));  // Ordena las metas por ID
+  cargarMetas(): void {
+    this.Service.getMetas().subscribe({
+      next: (metas) => {
+        this.metas = metas;
       },
-      error: (err) => console.error('Error al cargar metas:', err)
+      error: (err: any) => {
+        console.error('Error al cargar metas:', err);
+        alert('Error al cargar metas. Por favor, inténtelo de nuevo.');
+      },
     });
   }
 
-  // Método para agregar una nueva meta
-  addMeta(): void {
-    if (!this.tipoMeta || !this.objetivoMeta || !this.montoMeta || this.montoMeta <= 0) {
-      alert('Por favor completa todos los campos correctamente');
-      return;
+  crearMeta(): void {
+    this.Service.createMeta(this.interfaz).subscribe({
+      next: () => {
+        this.cargarMetas();
+        this.interfaz = {
+          tipoMeta: '',
+          objetivoMeta: '',
+          montoMeta: 0,
+          fechaMeta: new Date().toISOString().split('T')[0],
+        };
+      },
+      error: (err: any) => {
+        console.error('Error al crear meta:', err);
+        alert('Error al crear meta. Por favor, inténtelo de nuevo.');
+      },
+    });
+  }
+
+  seleccionarMeta(meta: Meta): void {
+    this.metaSeleccionada = { ...meta };
+  }
+
+  actualizarMeta(): void {
+    if (this.metaSeleccionada && this.metaSeleccionada.id) {
+      this.Service.updateMeta(this.metaSeleccionada.id, this.metaSeleccionada).subscribe({
+        next: () => {
+          this.cargarMetas();
+          this.metaSeleccionada = null; // Asignar null después de la actualización
+        },
+        error: (err: any) => {
+          console.error('Error al actualizar meta:', err);
+          alert('Error al actualizar meta. Por favor, inténtelo de nuevo.');
+        },
+      });
     }
+  }
 
-    const nuevaMeta: Meta = {
-      tipoMeta: this.tipoMeta,
-      objetivoMeta: this.objetivoMeta,
-      montoMeta: this.montoMeta,
-      fechaMeta: this.fechaMeta
-    };
-
-    this.service.createMeta(nuevaMeta).subscribe(res => {
-      this.metas.unshift(res);  // Añade la nueva meta al principio de la lista
-      this.resetForm();  // Resetea el formulario
+  eliminarMeta(id: number): void {
+    this.Service.deleteMeta(id).subscribe({
+      next: () => {
+        this.cargarMetas();
+      },
+      error: (err: any) => {
+        console.error('Error al eliminar meta:', err);
+        alert('Error al eliminar meta. Por favor, inténtelo de nuevo.');
+      },
     });
   }
 
-  // Método para reiniciar el formulario
-  resetForm(): void {
-    this.tipoMeta = '';
-    this.objetivoMeta = '';
-    this.montoMeta = null;
-    this.fechaMeta = new Date().toISOString().split('T')[0];  // Establece la fecha de hoy nuevamente
+  trackByMeta(index: number, meta: Meta): number {
+    return meta.id || index;
   }
 }
