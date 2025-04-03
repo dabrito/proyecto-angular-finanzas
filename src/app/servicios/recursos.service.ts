@@ -14,6 +14,8 @@ export class RecursosService {
   private apitransacciones = 'http://localhost:3000/api/transacciones';
   private apitipos = 'http://localhost:3000/api/tipos';
   private apicategorias = 'http://localhost:3000/api/categorias';
+
+  private apiConvert = 'http://localhost:3000/api/convert';
   
   private baseUrl = 'https://api.exchangerate.host';
   private apiKey = '2dfc4f27f1c8c94842dba3872ff2123c';
@@ -48,5 +50,15 @@ export class RecursosService {
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apitransacciones}/${id}`);
+  }
+
+  // Método para realizar la conversión
+  convertir(montoOrigen: number, monedaOrigen: string, monedaDestino: string): Observable<any> {
+    // Envía los datos al backend para realizar la conversión
+    return this.http.post<any>(this.apiConvert, {
+      monto_origen: montoOrigen,
+      moneda_origen: monedaOrigen,
+      moneda_destino: monedaDestino
+    });
   }
 }
