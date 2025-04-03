@@ -8,6 +8,8 @@ import { LiveResponse } from '../interfaz/currencyLive';
 import { Transaccion } from '../interfaz/transaccion';
 import { Categoria } from '../interfaz/categoria';
 import { Tipo } from '../interfaz/tipo';
+import { Meta } from '../interfaz/metas';
+
 
 @Injectable({providedIn: 'root'})
 export class RecursosService {
@@ -51,6 +53,15 @@ export class RecursosService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apitransacciones}/${id}`);
   }
+
+  getAllMetas() {
+    return this.http.get<Meta[]>('URL_DEL_BACKEND/metas');
+  }
+  
+  createMeta(meta: Meta) {
+    return this.http.post<Meta>('URL_DEL_BACKEND/metas', meta);
+  }
+  
 
   // Método para realizar la conversión
   convertir(montoOrigen: number, monedaOrigen: string, monedaDestino: string): Observable<any> {
