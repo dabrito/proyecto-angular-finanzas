@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const { Transaccion, Categoria } = require('../models');
+const { Transaccion, Categoria, tipo } = require('../models');
 
 // Obtener todas las transacciones
 router.get('/', async (req, res) => {
   try {
     const transacciones = await Transaccion.findAll({
-      include: {
-        model: Categoria,
-        as: 'categoria',
-      },
+      include: [
+        { model: Categoria, as: 'categoria' },
+        { model: tipo, as: 'tipo' }
+      ]
     });
     res.json(transacciones);
   } catch (err) {

@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { Categoria } = require('../models');
 
-// Obtener todas las categorías
 router.get('/', async (req, res) => {
   try {
     const categorias = await Categoria.findAll();

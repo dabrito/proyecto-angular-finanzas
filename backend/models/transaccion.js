@@ -6,13 +6,14 @@ module.exports = (sequelize, DataTypes) => {
   class Transaccion extends Model {
     static associate(models) {
       Transaccion.belongsTo(models.Categoria, { foreignKey: 'categoryId', as: 'categoria', });
+      Transaccion.belongsTo(models.tipo, { foreignKey: 'tiposId', as: 'tipo', });
     }
   }
   Transaccion.init({
-    type: DataTypes.STRING,
     amount: DataTypes.FLOAT,
     date: DataTypes.DATE,
-    categoryId: DataTypes.INTEGER
+    categoryId: DataTypes.INTEGER,
+    tiposId: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Transaccion',
