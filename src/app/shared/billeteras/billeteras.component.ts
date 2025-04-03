@@ -16,7 +16,7 @@ export class BilleterasComponent implements OnInit {
   constructor(private transaccionService: RecursosService) {}
 
   ngOnInit(): void {
-    this.transaccionService.getAll().subscribe((data) => {
+    this.transaccionService.getAllTransacciones().subscribe((data) => {
       this.transactions = data;
     });
   }

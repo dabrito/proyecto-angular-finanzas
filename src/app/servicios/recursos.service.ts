@@ -4,16 +4,19 @@ import { Observable } from 'rxjs';
 
 import { ListResponse } from '../interfaz/currencyList';
 import { LiveResponse } from '../interfaz/currencyLive';
-import { Transaccion } from '../interfaz/transaccion';
 
-@Injectable({
-  providedIn: 'root'
-})
+import { Transaccion } from '../interfaz/transaccion';
+import { Categoria } from '../interfaz/categoria';
+import { Tipo } from '../interfaz/tipo';
+
+@Injectable({providedIn: 'root'})
 export class RecursosService {
-  private api = 'http://localhost:3000/api/transacciones';
+  private apitransacciones = 'http://localhost:3000/api/transacciones';
+  private apitipos = 'http://localhost:3000/api/tipos';
+  private apicategorias = 'http://localhost:3000/api/categorias';
+  
   private baseUrl = 'https://api.exchangerate.host';
-  private apiKey = '2dfc4f27f1c8c94842dba3872ff2123c'; // tu API key
-  // private apiKey = '2dfc4f27f1c8c94842dba3872ff1123c'; // API con fallo interno para que no consuma 
+  private apiKey = '2dfc4f27f1c8c94842dba3872ff2123c';
 
   constructor(private http: HttpClient) {}
 
@@ -27,15 +30,23 @@ export class RecursosService {
     return this.http.get<LiveResponse>(url);
   }
 
-  getAll(): Observable<Transaccion[]> {
-    return this.http.get<Transaccion[]>(this.api);
+  getAllTransacciones(): Observable<Transaccion[]> {
+    return this.http.get<Transaccion[]>(this.apitransacciones);
+  }
+
+  getAllCategorias(): Observable<Categoria[]> {
+    return this.http.get<Categoria[]>(this.apicategorias);
+  }
+
+  getAllTipos(): Observable<Tipo[]> {
+    return this.http.get<Tipo[]>(this.apitipos);
   }
 
   create(transaccion: Transaccion): Observable<Transaccion> {
-    return this.http.post<Transaccion>(this.api, transaccion);
+    return this.http.post<Transaccion>(this.apitransacciones, transaccion);
   }
 
   delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.api}/${id}`);
+    return this.http.delete<void>(`${this.apitransacciones}/${id}`);
   }
 }

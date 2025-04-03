@@ -14,7 +14,7 @@
         <td>{{ t.date | date:'dd/MM/yyyy' }}</td>
         <td>{{ t.categoria?.nombre || ('Categoría ' + t.categoryId) }}</td>
         <td>{{ t.amount | currency:'USD' }}</td>
-        <td>{{ t.type }}</td>
+        <td>{{ t.tipo?.nombre || 'Sin tipo' }}</td>
         <td>
           <button class="btn btn-danger btn-sm" (click)="deleteTransaction(t.id)">Eliminar</button>
         </td>

@@ -5,11 +5,17 @@
 FrontEnd = http://localhost:4200/
 BackEnd = http://localhost:3000/
 
+Desarrolle aplicación web siguiendo los siguientes parámetros:
+
+*-Dos aplicaciones Front-end (puede utilizar el proyecto del primer parcial) y Back-end. Deben utilizar puertos diferentes.
+*Debe usar un tema predefinido.
+*El backend debe implementar servicios que interactúen con la base de datos.
+La base de datos debe tener un modelo acorde al tema elegido con sus debidas relaciones.[no menos de 5 tablas]
+*el backend debe ser desarrollado con nodejs y express según lo revisado en clases.
+
+
 Se pide lo siguiente:
 
-- La aplicación debe ser relacionada a un tema (elegido en clase).
-- Use componentes de Angular.
-- Divida su página en secciones para utilizar diversos componentes.
 - Proporcione navegabilidad mediante el uso de rutas y el uso de menú[mínimo 4 opciones diferentes].
 - Cargue información de diversos tipos utilizando los controles adecuados, utilice bootstrap.
 - Use multimedia (imágenes, sonidos, etc.) [Debe existir algún tipo de movimiento de los controles, por ejemplo el cambio en un carrusel, etc.]

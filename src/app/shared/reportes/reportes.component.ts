@@ -61,7 +61,7 @@ export class ReportesComponent implements OnInit, AfterViewInit {
   constructor(private transaccionService: RecursosService) {}
 
   ngOnInit(): void {
-    this.transaccionService.getAll().subscribe((data) => {
+    this.transaccionService.getAllTransacciones().subscribe((data) => {
       this.transactions = data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
       // this.transactions = data;
       this.updateCharts();
@@ -80,9 +80,9 @@ export class ReportesComponent implements OnInit, AfterViewInit {
     let totalIngresos = 0;
     let totalGastos = 0;
     this.transactions.forEach((t) => {
-      if (t.type === 'ingreso') {
+      if (t.tipo?.nombre === 'ingreso') {
         totalIngresos += t.amount;
-      } else {
+      } else if (t.tipo?.nombre === 'gasto') {
         totalGastos += t.amount;
       }
     });
@@ -93,10 +93,10 @@ export class ReportesComponent implements OnInit, AfterViewInit {
     const gastosPorCategoria: { [key: string]: number } = {};
 
     this.transactions.forEach((t) => {
-      const categoriaKey = `Categoria ${t.categoryId}`; // puedes cambiar esto si tienes el nombre real
-      if (t.type === 'ingreso') {
+      const categoriaKey = `Categoria ${t.categoria?.nombre}`; // puedes cambiar esto si tienes el nombre real
+      if (t.tipo?.nombre === 'ingreso') {
         ingresosPorCategoria[categoriaKey] = (ingresosPorCategoria[categoriaKey] || 0) + t.amount;
-      } else {
+      } else if (t.tipo?.nombre === 'gasto') {
         gastosPorCategoria[categoriaKey] = (gastosPorCategoria[categoriaKey] || 0) + t.amount;
       }
     });
@@ -172,12 +172,12 @@ export class ReportesComponent implements OnInit, AfterViewInit {
       if (!grouped[monthIndex]) {
         grouped[monthIndex] = { ingreso: 0, gasto: 0 };
       }
-      if (t.type === 'ingreso') {
+      if (t.tipo?.nombre === 'ingreso') {
         grouped[monthIndex].ingreso += t.amount;
-      } else {
+      } else if (t.tipo?.nombre === 'gasto') {
         grouped[monthIndex].gasto += t.amount;
       }
-    });
+    });    
 
     // Obtener los índices de mes en orden ascendente
     const sortedMonthIndices = Object.keys(grouped)
